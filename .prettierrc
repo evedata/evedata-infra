@@ -1,0 +1,14 @@
+{
+  "overrides": [
+    {
+      "files": ["**/*.jsonc"],
+      "options": {
+        "trailingComma": "none"
+      }
+    }
+  ],
+  "plugins": ["prettier-plugin-toml"],
+  "printWidth": 88,
+  "proseWrap": "always",
+  "reorderKeys": true
+}

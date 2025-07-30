@@ -1,0 +1,50 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    reviewers:
+      - "corvinvale"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    reviewers:
+      - "corvinvale"
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    open-pull-requests-limit: 10
+    groups:
+      development:
+        patterns:
+          - "codespell"
+          - "pre-commit"
+          - "pyright"
+          - "ruff"
+      production:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "codespell"
+          - "pre-commit"
+          - "pyright"
+          - "ruff"

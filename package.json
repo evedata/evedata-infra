@@ -1,0 +1,18 @@
+{
+  "name": "evedata-infra",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "fix:markdown": "markdownlint-cli2 --fix .",
+    "format:json": "prettier \"**/*.{json,jsonc}\" --write",
+    "format:markdown": "prettier \"**/*.md\" --write",
+    "format:toml": "prettier \"**/*.toml\" --write",
+    "lint:markdown": "markdownlint-cli2 ."
+  },
+  "packageManager": "pnpm@10.13.1",
+  "devDependencies": {
+    "markdownlint-cli2": "^0.18.1",
+    "prettier": "^3.6.2",
+    "prettier-plugin-toml": "^2.0.6"
+  }
+}

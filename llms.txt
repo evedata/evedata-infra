@@ -1,0 +1,5 @@
+# EVEData Infrastructure
+
+> This repository contains all infrastructure-as-code (IaC) and configuration for the
+> EVEData platform. EVEData's infrastructure spans multiple cloud providers with a focus
+> on cost-efficiency, maintainability, and operational simplicity.
