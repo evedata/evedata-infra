@@ -50,13 +50,3 @@ resource "cloudflare_dns_record" "evedata_io-cloudflare-txt-spf" {
   zone_id  = local.zone_map["evedata.io"].id
   settings = {}
 }
-
-resource "cloudflare_dns_record" "evedata_io-txt-google-site-verification" {
-  content  = "\"google-site-verification=mOu9mjHGUYz_CV4-3yPZBseE6LiqIneFrfSa9bBioCs\""
-  name     = "evedata.io"
-  proxied  = false
-  ttl      = 3600
-  type     = "TXT"
-  zone_id  = local.zone_map["evedata.io"].id
-  settings = {}
-}
