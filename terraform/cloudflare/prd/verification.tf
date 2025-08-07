@@ -17,3 +17,13 @@ resource "cloudflare_dns_record" "evedata_io-txt-google-site-verification" {
   zone_id  = local.zone_map["evedata.io"].id
   settings = {}
 }
+
+resource "cloudflare_dns_record" "evedata_io-txt-bsky-verification" {
+  content  = "\"did=did:plc:kjtkb4yvbpj3dim7munow6j7\""
+  name     = "_atproto"
+  proxied  = false
+  ttl      = 3600
+  type     = "TXT"
+  zone_id  = local.zone_map["evedata.io"].id
+  settings = {}
+}
