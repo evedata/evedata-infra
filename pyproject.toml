@@ -1,0 +1,7 @@
+[project]
+name = "evedata-infra"
+version = "0.1.0"
+description = "Automation for EVEData's infrastructure."
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = []
