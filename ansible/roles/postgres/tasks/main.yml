@@ -1,0 +1,16 @@
+---
+# Main task orchestration for PostgreSQL role
+- name: "Include validation tasks"
+  ansible.builtin.include_tasks: validate.yml
+  tags: ['postgres', 'validate']
+
+- name: "Include installation tasks"
+  ansible.builtin.include_tasks: install.yml
+  tags: ['postgres', 'install']
+
+- name: "Ensure PostgreSQL is started and enabled"
+  ansible.builtin.systemd_service:
+    name: "postgresql@{{ postgres_version }}-{{ postgres_cluster_name }}"
+    state: started
+    enabled: true
+  tags: ['postgres', 'service']

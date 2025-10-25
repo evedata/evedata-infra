@@ -1,0 +1,24 @@
+---
+galaxy_info:
+  role_name: postgres
+  author: EVEData Infrastructure Team
+  description: Production-grade PostgreSQL with pgBouncer and pgBackRest
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - "24.04"
+  galaxy_tags:
+    - database
+    - postgresql
+    - backup
+    - monitoring
+    - security
+
+dependencies: []
+
+collections:
+  - community.postgresql
+  - ansible.posix
+  - community.general

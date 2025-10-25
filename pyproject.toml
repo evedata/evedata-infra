@@ -4,4 +4,6 @@ version = "0.1.0"
 description = "Automation for EVEData's infrastructure."
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
-dependencies = []
+dependencies = [
+    "ansible>=12.1.0",
+]

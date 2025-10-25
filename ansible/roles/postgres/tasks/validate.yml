@@ -1,0 +1,46 @@
+---
+# Pre-flight validation tasks
+- name: "Check minimum system requirements"
+  ansible.builtin.assert:
+    that:
+      - ansible_memtotal_mb >= 4096
+      - ansible_processor_vcpus >= 2
+      - ansible_distribution == "Ubuntu"
+      - ansible_distribution_version == "24.04"
+    fail_msg: "System does not meet minimum requirements"
+  tags: ['validation']
+
+- name: "Calculate memory allocation"
+  ansible.builtin.set_fact:
+    postgres_calculated_shared_buffers: "{{ (ansible_memtotal_mb * 0.25) | int }}MB"
+    postgres_calculated_effective_cache_size: "{{ (ansible_memtotal_mb * 0.75) | int }}MB"
+    postgres_calculated_maintenance_work_mem: "{{ (ansible_memtotal_mb * 0.03125) | int }}MB"
+  when: postgres_auto_tune_memory
+  tags: ['validation']
+
+- name: "Check disk space for data directory"
+  ansible.builtin.shell: |
+    df --output=avail {{ postgres_data_directory | dirname }} | tail -1
+  register: postgres_disk_space
+  changed_when: false
+  tags: ['validation']
+
+- name: "Ensure sufficient disk space"
+  ansible.builtin.assert:
+    that:
+      - postgres_disk_space.stdout | int > 10485760  # 10GB in KB
+    fail_msg: "Insufficient disk space for PostgreSQL data directory"
+  tags: ['validation']
+
+- name: "Check for conflicting PostgreSQL installations"
+  ansible.builtin.shell: |
+    dpkg -l | grep postgresql || true
+  register: postgres_existing_packages
+  changed_when: false
+  tags: ['validation']
+
+- name: "Warn about existing PostgreSQL packages"
+  ansible.builtin.debug:
+    msg: "Warning: Existing PostgreSQL packages detected: {{ postgres_existing_packages.stdout_lines }}"
+  when: postgres_existing_packages.stdout != ""
+  tags: ['validation']

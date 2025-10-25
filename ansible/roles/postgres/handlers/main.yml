@@ -1,0 +1,61 @@
+---
+# PostgreSQL role handlers
+- name: restart postgresql
+  ansible.builtin.systemd_service:
+    name: "postgresql@{{ postgres_version }}-{{ postgres_cluster_name }}"
+    state: restarted
+  listen: "restart postgresql"
+
+- name: reload postgresql
+  ansible.builtin.systemd_service:
+    name: "postgresql@{{ postgres_version }}-{{ postgres_cluster_name }}"
+    state: reloaded
+  listen: "reload postgresql"
+
+- name: restart pgbouncer
+  ansible.builtin.systemd_service:
+    name: pgbouncer
+    state: restarted
+  when: pgbouncer_enabled
+  listen: "restart pgbouncer"
+
+- name: reload pgbouncer
+  ansible.builtin.systemd_service:
+    name: pgbouncer
+    state: reloaded
+  when: pgbouncer_enabled
+  listen: "reload pgbouncer"
+
+- name: reload systemd
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  listen: "reload systemd"
+
+- name: apply sysctl
+  ansible.builtin.shell: sysctl -p /etc/sysctl.d/99-postgres.conf
+  listen: "apply sysctl"
+
+- name: reload ufw
+  community.general.ufw:
+    state: reloaded
+  when: postgres_firewall_enabled
+  listen: "reload ufw"
+
+- name: restart postgres-exporter
+  ansible.builtin.systemd_service:
+    name: prometheus-postgres-exporter
+    state: restarted
+  when: postgres_exporter_enabled
+  listen: "restart postgres-exporter"
+
+- name: restart pgbouncer-exporter
+  ansible.builtin.systemd_service:
+    name: prometheus-pgbouncer-exporter
+    state: restarted
+  when: pgbouncer_exporter_enabled
+  listen: "restart pgbouncer-exporter"
+
+- name: reload apparmor
+  ansible.builtin.shell: apparmor_parser -r /etc/apparmor.d/usr.lib.postgresql.*
+  when: postgres_apparmor_enabled
+  listen: "reload apparmor"

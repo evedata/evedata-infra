@@ -1,0 +1,43 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: "Check PostgreSQL is running"
+      ansible.builtin.systemd_service:
+        name: "postgresql@16-main"
+      register: postgres_service
+      failed_when: postgres_service.status.ActiveState != "active"
+
+    - name: "Test PostgreSQL connection"
+      community.postgresql.postgresql_ping:
+        login_host: localhost
+        login_user: postgres
+        login_unix_socket: /var/run/postgresql
+      register: postgres_ping
+      failed_when: postgres_ping.is_available != true
+
+    - name: "Check configuration files exist"
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: config_files
+      failed_when: not config_files.stat.exists
+      loop:
+        - /etc/postgresql/16/main/postgresql.conf
+        - /etc/postgresql/16/main/pg_hba.conf
+
+    - name: "Check PostgreSQL is listening on correct port"
+      ansible.builtin.wait_for:
+        port: 5432
+        host: localhost
+        timeout: 10
+
+    - name: "Verify JSON log format"
+      ansible.builtin.shell: |
+        set -o pipefail
+        if ls /var/log/postgresql/postgresql-*.json 1> /dev/null 2>&1; then
+          tail -1 /var/log/postgresql/postgresql-*.json | jq . > /dev/null
+        fi
+      register: json_validation
+      failed_when: json_validation.rc != 0
+      changed_when: false

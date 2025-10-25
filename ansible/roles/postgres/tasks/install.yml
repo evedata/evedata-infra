@@ -1,0 +1,71 @@
+---
+# Package installation tasks
+- name: "Install required system packages"
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - software-properties-common
+      - python3-psycopg2
+    state: present
+    update_cache: true
+  tags: ['install']
+
+- name: "Add PGDG repository key"
+  ansible.builtin.apt_key:
+    url: "{{ postgres_pgdg_repo_key_url }}"
+    state: present
+  tags: ['install']
+
+- name: "Add PGDG repository"
+  ansible.builtin.apt_repository:
+    repo: "{{ postgres_pgdg_repo }}"
+    state: present
+    update_cache: true
+  tags: ['install']
+
+- name: "Install PostgreSQL packages"
+  ansible.builtin.apt:
+    name:
+      - "postgresql-{{ postgres_version }}"
+      - "postgresql-client-{{ postgres_version }}"
+      - "postgresql-contrib-{{ postgres_version }}"
+      - postgresql-common
+    state: present
+  tags: ['install']
+  notify:
+    - restart postgresql
+
+- name: "Install pgBouncer"
+  ansible.builtin.apt:
+    name: pgbouncer
+    state: present
+  when: pgbouncer_enabled
+  tags: ['install']
+
+- name: "Install pgBackRest"
+  ansible.builtin.apt:
+    name: pgbackrest
+    state: present
+  when: pgbackrest_enabled
+  tags: ['install']
+
+- name: "Install monitoring packages"
+  ansible.builtin.apt:
+    name:
+      - prometheus-postgres-exporter
+      - prometheus-pgbouncer-exporter
+    state: present
+  when: postgres_monitoring_enabled
+  tags: ['install', 'monitoring']
+
+- name: "Install security packages"
+  ansible.builtin.apt:
+    name:
+      - apparmor-utils
+      - ufw
+    state: present
+  tags: ['install', 'security']

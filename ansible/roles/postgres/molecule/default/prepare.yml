@@ -1,0 +1,15 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: "Install systemd in container"
+      ansible.builtin.apt:
+        name: systemd
+        state: present
+        update_cache: true
+
+    - name: "Start systemd"
+      ansible.builtin.command: systemctl --version
+      changed_when: false
