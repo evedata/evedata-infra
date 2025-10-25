@@ -22,3 +22,6 @@ version = "1.33"
 
 [tasks.gcloud-auth]
 run = "gcloud auth application-default login --impersonate-service-account $GCLOUD_IDENTITY"
+
+[env]
+ANSIBLE_HOME = "{{env.PWD}}/ansible"
