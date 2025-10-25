@@ -1,0 +1,24 @@
+[settings]
+lockfile = true
+python.uv_venv_auto = true
+
+[tools.argocd]
+version = "3"
+
+[tools.k9s]
+version = "0.50"
+
+[tools.helm]
+version = "3"
+
+[tools.kubectl]
+version = "1.32"
+
+[tools.opentofu]
+version = "1.10"
+
+[tools.stern]
+version = "1.33"
+
+[tasks.gcloud-auth]
+run = "gcloud auth application-default login --impersonate-service-account $GCLOUD_IDENTITY"

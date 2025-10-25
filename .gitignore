@@ -261,3 +261,7 @@ terraform.rc
 # planout
 *.retry
 .ansible/
+
+mise.local.toml
+mise.prd.toml
+mise.stg.toml
